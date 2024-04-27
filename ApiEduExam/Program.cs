@@ -1,5 +1,9 @@
 using Aplication.Common.Validators;
+using Aplication.Interfases;
+using Aplication.Repositories;
 using Data.DB;
+using Data.Interfaces;
+using Data.Repositories;
 using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +23,16 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 builder.Services.AddScoped<IValidator<User>, UserValidator>();
 builder.Services.AddScoped<IValidator<Fan>, FanValidator>();
 
+builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IAccountService, AccountService>();
+builder.Services.AddTransient<IAuthManager, AuthManager>();
+builder.Services.AddTransient<IUserService, IUserService>();
+builder.Services.AddTransient<ISubjectService, SubjectService>();
+builder.Services.AddTransient<IScienceService, ScienceService>();
+builder.Services.AddTransient<IOptionService, OptionService>();
+builder.Services.AddTransient<ITestService, TestService>();
+builder.Services.AddTransient<IEmailService, EmailService>();
+builder.Services.AddTransient<IAdminService, AdminService>();
 var app = builder.Build();
 
 
