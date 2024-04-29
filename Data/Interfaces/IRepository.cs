@@ -9,5 +9,6 @@ namespace Data.Interfaces
         Task DeleteAsync(T entity);
         Task<T?> GetByIdAsync(int id);
         Task<List<T>> GetAllAsync();
+        
     }
 }

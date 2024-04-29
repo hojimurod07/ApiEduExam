@@ -8,5 +8,6 @@ namespace Aplication.Common.Exceptions
         : base(message)
         {
         }
+
     }
 }

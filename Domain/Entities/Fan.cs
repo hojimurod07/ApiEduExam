@@ -7,5 +7,7 @@ namespace Domain.Entities
         public string Spiker { get; set; } = string.Empty;
         public string Description {  get; set; } = string.Empty;
         public double Price {  get; set; }
+        public List<string> Topics { get; set; } = new List<string>();  
     }
+
 }

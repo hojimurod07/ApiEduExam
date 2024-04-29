@@ -25,19 +25,19 @@ namespace Aplication.Repositories
         private readonly IUnitOfWork _ofWork = ofWork;
         private readonly IValidator<User> _validator = validator;
         private readonly IMemoryCache _cache = cache;
-        private readonly IEmailService _emailService = emailService;
+        private readonly Data.Interfaces.IEmailService _emailService = emailService;
 
         public async Task<string> LoginAsync(LoginDto login)
         {
-            var user = await _ofWork.GetByEmailAsync(login.Email);
+            var user = await _ofWork.User.GetByEmailAsync(login.Email);
 
-            if (user is null) throw new StatusCodeExeption(HttpStatusCode.NotFound, "User not found!");
+            if (user is null) throw new StatusCodeException(HttpStatusCode.NotFound, "User not found!");
 
             if (!user.Password.Equals(PasswordHasher.GetHash(login.Password)))
-                throw new StatusCodeExeption(HttpStatusCode.Conflict, "Password incorrect!");
+                throw new StatusCodeException(HttpStatusCode.Conflict, "Password incorrect!");
 
             if (!user.IsVerified)
-                throw new StatusCodeExeption(HttpStatusCode.BadRequest, "User is not verified!");
+                throw new StatusCodeException(HttpStatusCode.BadRequest, "User is not verified!");
             return _auth.GeneratedToken(user);
         }
 
@@ -47,11 +47,11 @@ namespace Aplication.Repositories
         {
             var user = await _ofWork.User.GetByEmailAsync(dto.Email);
 
-            if (user is not null) throw new StatusCodeExeption(HttpStatusCode.AlreadyReported, "User already exists!");
+            if (user is not null) throw new StatusCodeException(HttpStatusCode.AlreadyReported, "User already exists!");
 
             var result = await _validator.ValidateAsync(dto);
             if (!result.IsValid)
-                throw new ValidatorException(result.GetErrorMessages());
+                throw new ValidationException(result());
 
             var entity = (User)dto;
             entity.Password = PasswordHasher.GetHash(entity.Password);
@@ -63,7 +63,7 @@ namespace Aplication.Repositories
         {
             var user = await _ofWork.User.GetByEmailAsync(email);
             if (user is null)
-                throw new StatusCodeExeption(HttpStatusCode.NotFound, "User not found!");
+                throw new StatusCodeException(HttpStatusCode.NotFound, "User not found!");
             var code = GeneratedCode();
             _cache.Set(email, code, TimeSpan.FromSeconds(60));
             await _emailService.SendMessageAsync(email, "Verification code!", code);
@@ -73,7 +73,7 @@ namespace Aplication.Repositories
         {
             var user = await _ofWork.User.GetByEmailAsync(email);
             if (user is null)
-                throw new StatusCodeExeption(HttpStatusCode.NotFound, "User not found!");
+                throw new StatusCodeException(HttpStatusCode.NotFound, "User not found!");
             if (_cache.TryGetValue(email, out var result))
             {
                 if (code.Equals(result))
@@ -83,10 +83,10 @@ namespace Aplication.Repositories
                     return true;
                 }
                 else
-                    throw new StatusCodeExeption(HttpStatusCode.Conflict, "Code is incorrect!");
+                    throw new StatusCodeException(HttpStatusCode.Conflict, "Code is incorrect!");
             }
             else
-                throw new StatusCodeExeption(HttpStatusCode.BadRequest, "Code expired!");
+                throw new StatusCodeException(HttpStatusCode.BadRequest, "Code expired!");
         }
         private string GeneratedCode()
             => (new Random().Next(10000, 99999)).ToString();

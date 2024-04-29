@@ -6,5 +6,6 @@ namespace Data.Interfaces
 {
     public  interface IFanRepository:IRepository<Fan>
     {
+        Task<List<string>> GetAllTopic();
     }
 }

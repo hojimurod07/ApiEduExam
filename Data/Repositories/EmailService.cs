@@ -1,7 +1,11 @@
 ﻿
 using Data.Interfaces;
+using MailKit.Net.Smtp;
+using MailKit.Security;
 using Microsoft.Extensions.Configuration;
-using System.Net.Mail;
+using MimeKit;
+using MimeKit.Text;
+
 
 namespace Data.Repositories
 {
@@ -19,7 +23,7 @@ namespace Data.Repositories
 
 
             var smtp = new SmtpClient();
-            await smtp.ConnectAsync(_config["Host"], 587, SecureSocketOptions.StartTls);
+            object value =  smtp.ConnectAsync(_config["Host"], 587, SecureSocketOptions.StartTls);
             await smtp.AuthenticateAsync(_config["EmailAddress"], _config["Password"]);
             await smtp.SendAsync(email);
             await smtp.DisconnectAsync(true);
