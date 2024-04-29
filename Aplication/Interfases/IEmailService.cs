@@ -1,7 +1,7 @@
 ﻿namespace Aplication.Interfases
 {
-    public  interface IEmailService
+    public interface IEmailService
     {
-        Task SendMessageAsync(string to, string subject, string message);
+        Task SendMessageToEmailAsync(string to, string title, string body);
     }
 }

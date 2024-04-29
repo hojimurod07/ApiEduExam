@@ -15,8 +15,8 @@ namespace Aplication.Repositories
     public class AccountService(IUnitOfWork ofWork,
                             IAuthManager authManager,
                             IValidator<User> validator,
-                            IMemoryCache cache,
-                            IEmailService emailService)
+                            IMemoryCache cache
+                           )
     : IAccountService
     {
 
@@ -25,7 +25,7 @@ namespace Aplication.Repositories
         private readonly IUnitOfWork _ofWork = ofWork;
         private readonly IValidator<User> _validator = validator;
         private readonly IMemoryCache _cache = cache;
-        private readonly Data.Interfaces.IEmailService _emailService = emailService;
+  
 
         public async Task<string> LoginAsync(LoginDto login)
         {
@@ -50,8 +50,8 @@ namespace Aplication.Repositories
             if (user is not null) throw new StatusCodeException(HttpStatusCode.AlreadyReported, "User already exists!");
 
             var result = await _validator.ValidateAsync(dto);
-            if (!result.IsValid)
-                throw new ValidationException(result());
+            //if (!result.IsValid)
+            //    throw new ValidatorException(result.G);
 
             var entity = (User)dto;
             entity.Password = PasswordHasher.GetHash(entity.Password);

@@ -8,6 +8,7 @@ using Domain.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Pqc.Crypto.Bike;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +27,11 @@ builder.Services.AddScoped<IValidator<Fan>, FanValidator>();
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<IAccountService, AccountService>();
 builder.Services.AddTransient<IAuthManager, AuthManager>();
-builder.Services.AddTransient<IUserService, IUserService>();
-
-
 
 builder.Services.AddTransient<IEmailService, EmailService>();
+
+
+//builder.Services.AddTransient<IEmailService, EmailService>();
 
 var app = builder.Build();
 
